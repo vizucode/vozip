@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/visstars7/vozip/services"
@@ -17,11 +18,14 @@ var zipCmd = &cobra.Command{
 	Short: "Method to zip a file / directory.",
 	Long:  "Method to zip a file / directory.",
 	Run: func(cmd *cobra.Command, args []string) {
+		start := time.Now()
 		err := services.Zip(args)
 
 		if err != nil {
 			fmt.Println(err)
 		}
+
+		fmt.Println("Done in ", time.Since(start).Seconds(), "Seconds")
 	},
 }
 
