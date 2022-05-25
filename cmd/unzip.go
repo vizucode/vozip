@@ -18,14 +18,29 @@ var unzipCmd = &cobra.Command{
 	Short: "Unzip command.",
 	Long:  "Command to unzip a zip file.",
 	Run: func(cmd *cobra.Command, args []string) {
-		start := time.Now()
-		err := services.Unzip(args)
+
+		benchmark, err := cmd.Flags().GetBool("benchmark")
 
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		fmt.Println("Done in ", time.Since(start).Seconds(), "Seconds")
+		if benchmark {
+			start := time.Now()
+			err := services.Unzip(args)
+
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			fmt.Println("Done in ", time.Since(start).Seconds(), "Seconds")
+		} else {
+			err := services.Unzip(args)
+
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 	},
 	Version: "1.0.0",
 }
@@ -41,4 +56,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// unzipCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	unzipCmd.Flags().BoolP("benchmark", "b", false, "See the benchmark")
 }
